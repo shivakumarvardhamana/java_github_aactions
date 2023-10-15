@@ -29,7 +29,9 @@ jobs:
     runs-on: [java]
     steps:
       - name : install docker
-        run : sudo apt-get install docker.io -y
+        run : |
+          sudo apt-get install docker.io -y
+          sudo chmod 777 /var/run/docker.sock
       # - name: install of docker
       #   run: |
       #    sudo apt update -y
