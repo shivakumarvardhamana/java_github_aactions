@@ -29,8 +29,8 @@ jobs:
     runs-on: [java]
     steps:
       - name: Pull Image from docker hub
-        run: docker pull shiva2720/springboot-example:latest
+        run: docker pull integrationninjas/springboot-example:latest
       - name: Delete old container
         run: docker rm -f springboot-example-container
       - name: Run docker container
-        run: docker run -d -p 8080:8080 --name springboot-example-container shiva2720/springboot-example
+        run: docker run -d -p 8080:8080 --name springboot-example-container integrationninjas/springboot-example
