@@ -2,7 +2,7 @@ name: CICD
 
 on:
   push:
-    branches: [deploy-to-ec2]
+    branches: [shiva]
 
 jobs:
   build:
@@ -26,11 +26,35 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: [aws-ec2]
+    runs-on: [java]
     steps:
+      - name : install docker
+        run : |
+          sudo apt-get install docker.io -y
+          sudo chmod 777 /var/run/docker.sock
+      # - name: install of docker
+      #   run: |
+      #    sudo apt update -y
+
+      #    sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+
+      #    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+      #    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable" -yes 
+
+      #    sudo apt update -y
+
+      #    apt-cache policy docker-ce -y
+
+      #    sudo apt install docker-ce -y
+
+      #    #sudo systemctl status docker
+
+      #    sudo chmod 777 /var/run/docker.sock
+        
       - name: Pull Image from docker hub
         run: docker pull shiva2720/springboot-example:latest
       - name: Delete old container
         run: docker rm -f springboot-example-container
       - name: Run docker container
-        run: docker run -d -p 8080:8080 --name springboot-example-container integrationninjas/springboot-example
+        run: docker run -d -p 8080:8080 --name springboot-example-container shiva2720/springboot-example
