@@ -19,17 +19,3 @@ spec:
         image: shiva2720/java-argo:20
         ports:
         - containerPort: 8080
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: spring-boot-app-service
-spec:
-  type: NodePort
-  ports:
-  - name: http
-    port: 80
-    targetPort: 8080
-    protocol: TCP
-  selector:
-    app: spring-boot-app
