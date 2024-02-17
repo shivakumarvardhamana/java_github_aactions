@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+    
+     environment{
+        SCANNER_HOME= tool 'sonar-scanner' 
+    }
+
+    stages {
+        stage('Git-Checkout') {
+            steps {
+                git branch: 'main',url:'https://github.com/shivakumarvardhamana/java_github_aactions.git'
+            }
+        }
+        stage('build-app') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+        stage('sonar-scanner') {
+            steps {
+                withSonarQubeEnv('sonar-scanner') {
+                    sh '$SCANNER_HOME/bin/sonar-scanner -Dsonar.java.binaries=. -Dsonar.projectName=java -Dsonar.projectKey=java'
+                }
+                
+            }
+        
+        }
+        stage('Docker-build & push') {
+            environment {
+            imagetag= "shiva2720/java-argo:${BUILD_NUMBER}"
+            }
+            steps {
+               script {
+                   withDockerRegistry(credentialsId: 'Docker-cred') {
+                       sh 'docker build -t shiva2720/java-argo:${BUILD_NUMBER} .'
+                       sh 'docker push shiva2720/java-argo:${BUILD_NUMBER} '
+                   }
+                   
+                    
+               }
+            }
+        }
+           stage('Update Deployment File') {
+        environment {
+            GIT_REPO_NAME = "java_github_aactions"
+            GIT_USER_NAME = "shivakumarvardhamana"
+        }
+        steps {
+                withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
+                sh '''
+                    git config user.email "shivchary08@gmail.com"
+                    git config user.name "shiva_kumar_vardhamana"
+                    BUILD_NUMBER=${BUILD_NUMBER}
+                    sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" manifests/deployment.yml
+                    git add manifests/deployment.yml
+                    git commit -m "Update deployment image to version ${BUILD_NUMBER}"
+                    git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME} HEAD:main
+                '''
+                }
+            }
+        }
+    }
+}
