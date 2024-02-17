@@ -2,5 +2,5 @@ projectKey=java
 serverUrl=http://52.43.114.241:9000
 serverVersion=9.9.4.87374
 dashboardUrl=http://52.43.114.241:9000/dashboard?id=java
-ceTaskId=AY23f_vq-oLJI_o7hxf5
-ceTaskUrl=http://52.43.114.241:9000/api/ce/task?id=AY23f_vq-oLJI_o7hxf5
+ceTaskId=AY23ksQf-oLJI_o7hxf6
+ceTaskUrl=http://52.43.114.241:9000/api/ce/task?id=AY23ksQf-oLJI_o7hxf6
