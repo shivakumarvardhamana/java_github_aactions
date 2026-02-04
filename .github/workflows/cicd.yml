@@ -1,37 +1,20 @@
-name: CICD
+name: KIND Dynamic Runner Test
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
 
 jobs:
   build:
-    runs-on: [ubuntu-latest]
-    steps:
-      - name: Checkout source
-        run : echo "hello iam kubernetes dynamicpod"
-  #       uses: actions/checkout@v3
-  #     - name: Setup Java
-  #       uses: actions/setup-java@v3
-  #       with:
-  #         distribution: 'temurin'
-  #         java-version: '17'
-  #     - name: Build Project
-  #       run: mvn clean install -DskipTests
-  #     - name: Login to docker hub
-  #       run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-  #     - name: Build docker image
-  #       run: docker build -t shiva2720/springboot-example .
-  #     - name: Publish image to docker hub
-  #       run: docker push shiva2720/springboot-example:latest
+    runs-on: [self-hosted, kind-runner]
+    container:
+      image: ubuntu:22.04
 
-  # deploy:
-  #   needs: build
-  #   runs-on: [aws-ec2]
-  #   steps:
-  #     - name: Pull Image from docker hub
-  #       run: docker pull shiva2720/springboot-example:latest
-  #     - name: Delete old container
-  #       run: docker rm -f springboot-example-container
-  #     - name: Run docker container
-  #       run: docker run -d -p 8080:8080 --name springboot-example-container integrationninjas/springboot-example
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run inside dynamic pod
+        run: |
+          echo "Running inside KIND pod"
+          kubectl get pods -A || true
