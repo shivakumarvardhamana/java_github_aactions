@@ -1,5 +1,4 @@
 name: KIND Dynamic Runner Test
-
 on:
   push:
     branches: [ "main" ]
