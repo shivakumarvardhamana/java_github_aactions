@@ -2,21 +2,22 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 
-# Function to print Hello World
-def print_hello():
+# function to run
+def hello_world():
     print("Hello World from Airflow!")
 
-# Define DAG
+# define DAG
 with DAG(
-    dag_id='hello_world_dag',
+    dag_id="hello_world_dag",
     start_date=datetime(2024, 1, 1),
-    schedule_interval='*/5 * * * *',  # Runs every 5 minutes
-    catchup=False
+    schedule="@daily",   # ✅ new parameter
+    catchup=False,
+    tags=["example"]
 ) as dag:
 
-    hello_task = PythonOperator(
-        task_id='print_hello_task',
-        python_callable=print_hello
+    task1 = PythonOperator(
+        task_id="hello_task",
+        python_callable=hello_world
     )
 
-    hello_task
+    task1
